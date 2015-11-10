@@ -944,12 +944,19 @@ class ModelSerializer(Serializer):
         opts = cls._meta.concrete_model._meta
         exclusions = [field.name for field in opts.fields + opts.many_to_many]
 
+        # Many-to-many field can raise ValueError exception.
+        def has_attr(obj, name):
+            try:
+                return hasattr(obj, name)
+            except ValueError:
+                return True
+
         for field_name, field in self.fields.items():
             field_name = field.source or field_name
             if (
                 field_name in exclusions
                 and not field.read_only
-                and (field.required or hasattr(instance, field_name))
+                and (field.required or has_attr(instance, field_name))
                 and not isinstance(field, Serializer)
             ):
                 exclusions.remove(field_name)
@@ -1054,6 +1061,9 @@ class ModelSerializer(Serializer):
         if getattr(obj, '_m2m_data', None):
             for accessor_name, object_list in obj._m2m_data.items():
                 setattr(obj, accessor_name, object_list)
+                if hasattr(obj, '_prefetched_objects_cache') \
+                        and accessor_name in obj._prefetched_objects_cache:
+                    obj._prefetched_objects_cache[accessor_name] = object_list
             del(obj._m2m_data)
 
         if getattr(obj, '_related_data', None):
