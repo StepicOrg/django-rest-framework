@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.test import TestCase
@@ -44,8 +44,7 @@ class MockView(APIView):
         return HttpResponse({'a': 1, 'b': 2, 'c': 3})
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     (r'^session/$', MockView.as_view(authentication_classes=[SessionAuthentication])),
     (r'^basic/$', MockView.as_view(authentication_classes=[BasicAuthentication])),
     (r'^token/$', MockView.as_view(authentication_classes=[TokenAuthentication])),
@@ -59,15 +58,14 @@ urlpatterns = patterns(
         )
     ),
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework'))
-)
+]
 
 
 class OAuth2AuthenticationDebug(OAuth2Authentication):
     allow_query_params_token = True
 
 if oauth2_provider is not None:
-    urlpatterns += patterns(
-        '',
+    urlpatterns += [
         url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
         url(r'^oauth2-test/$', MockView.as_view(authentication_classes=[OAuth2Authentication])),
         url(r'^oauth2-test-debug/$', MockView.as_view(authentication_classes=[OAuth2AuthenticationDebug])),
@@ -78,7 +76,7 @@ if oauth2_provider is not None:
                 permission_classes=[permissions.TokenHasReadWriteScope]
             )
         )
-    )
+    ]
 
 
 class BasicAuthTests(TestCase):

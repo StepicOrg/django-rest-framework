@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 import json
 from django.test import TestCase
 from rest_framework import generics, status, serializers
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from rest_framework.settings import api_settings
 from rest_framework.test import APIRequestFactory
 from tests.models import (
@@ -94,8 +94,7 @@ class OptionalRelationDetail(generics.RetrieveUpdateDestroyAPIView):
     model_serializer_class = serializers.HyperlinkedModelSerializer
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^basic/$', BasicList.as_view(), name='basicmodel-list'),
     url(r'^basic/(?P<pk>\d+)/$', BasicDetail.as_view(), name='basicmodel-detail'),
     url(r'^anchor/(?P<pk>\d+)/$', AnchorDetail.as_view(), name='anchor-detail'),
@@ -107,7 +106,7 @@ urlpatterns = patterns(
     url(r'^albums/(?P<title>\w[\w-]*)/$', AlbumDetail.as_view(), name='album-detail'),
     url(r'^photos/$', PhotoListCreate.as_view(), name='photo-list'),
     url(r'^optionalrelation/(?P<pk>\d+)/$', OptionalRelationDetail.as_view(), name='optionalrelationmodel-detail'),
-)
+]
 
 
 class TestBasicHyperlinkedView(TestCase):

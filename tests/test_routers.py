@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.db import models
 from django.test import TestCase
 from django.core.exceptions import ImproperlyConfigured
@@ -11,7 +11,7 @@ from rest_framework.test import APIRequestFactory
 
 factory = APIRequestFactory()
 
-urlpatterns = patterns('',)
+urlpatterns = []
 
 
 class BasicViewSet(viewsets.ViewSet):
@@ -93,10 +93,9 @@ class TestCustomLookupFields(TestCase):
 
         from tests import test_routers
         urls = getattr(test_routers, 'urlpatterns')
-        urls += patterns(
-            '',
+        urls += [
             url(r'^', include(self.router.urls)),
-        )
+        ]
 
     def test_custom_lookup_field_route(self):
         detail_route = self.router.urls[-1]

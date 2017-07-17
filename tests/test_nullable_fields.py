@@ -1,16 +1,15 @@
 from django.core.urlresolvers import reverse
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from rest_framework.test import APITestCase
 from tests.models import NullableForeignKeySource
 from tests.serializers import NullableFKSourceSerializer
 from tests.views import NullableFKSourceDetail
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^objects/(?P<pk>\d+)/$', NullableFKSourceDetail.as_view(), name='object-detail'),
-)
+]
 
 
 class NullableForeignKeyTests(APITestCase):

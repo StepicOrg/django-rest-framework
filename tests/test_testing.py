@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 
 from __future__ import unicode_literals
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from io import BytesIO
 
 from django.contrib.auth.models import User
@@ -34,12 +34,11 @@ def redirect_view(request):
     return redirect('/view/')
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^view/$', view),
     url(r'^session-view/$', session_view),
     url(r'^redirect-view/$', redirect_view),
-)
+]
 
 
 class TestAPITestClient(TestCase):

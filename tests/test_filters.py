@@ -5,7 +5,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import unittest
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from rest_framework import generics, serializers, status, filters
 from rest_framework.compat import django_filters
 from rest_framework.test import APIRequestFactory
@@ -86,13 +86,12 @@ if django_filters:
         def get_queryset(self):
             return FilterableItem.objects.all()
 
-    urlpatterns = patterns(
-        '',
+    urlpatterns = [
         url(r'^(?P<pk>\d+)/$', FilterClassDetailView.as_view(), name='detail-view'),
         url(r'^$', FilterClassRootView.as_view(), name='root-view'),
         url(r'^get-queryset/$', GetQuerysetView.as_view(),
             name='get-queryset-view'),
-    )
+    ]
 
 
 class CommonFilteringTestCase(TestCase):
