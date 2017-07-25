@@ -298,3 +298,45 @@ try:
     import importlib
 except ImportError:
     from django.utils import importlib
+
+
+def get_all_related_objects(meta):
+    """
+    _meta.get_all_related_objects is deprecated since django 1.8
+    """
+    return [
+        f for f in meta.get_fields()
+        if (f.one_to_many or f.one_to_one) and f.auto_created and not f.concrete
+    ]
+
+
+def get_all_related_objects_with_model(meta):
+    """
+     _meta.get_all_related_objects_with_model is deprecated since django 1.8
+    """
+    return [
+        (f, f.model if f.model != meta.model else None)
+        for f in meta.get_fields()
+        if (f.one_to_many or f.one_to_one) and f.auto_created and not f.concrete
+    ]
+
+
+def get_all_related_many_to_many_objects(meta):
+    """
+    _meta.get_all_related_many_to_many_objects is deprecated since django 1.8
+    """
+    return [
+        f for f in meta.get_fields(include_hidden=True)
+        if f.many_to_many and f.auto_created
+    ]
+
+
+def get_all_related_m2m_objects_with_model(meta):
+    """
+    _meta.get_all_related_m2m_objects_with_model is deprecated since django 1.8
+    """
+    return [
+        (f, f.model if f.model != meta.model else None)
+        for f in meta.get_fields(include_hidden=True)
+        if f.many_to_many and f.auto_created
+    ]

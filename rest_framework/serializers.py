@@ -25,7 +25,9 @@ from django.forms import widgets
 from django.utils import six
 from django.utils.functional import cached_property
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.compat import SortedDict, GenericForeignKey
+from rest_framework.compat import (SortedDict, GenericForeignKey, get_all_related_objects,
+                                   get_all_related_objects_with_model, get_all_related_many_to_many_objects,
+                                   get_all_related_m2m_objects_with_model)
 from rest_framework.settings import api_settings
 
 
@@ -760,8 +762,8 @@ class ModelSerializer(Serializer):
         else:
             # Reverse relationships are only included if they are explicitly
             # present in the `fields` option on the serializer
-            reverse_rels = opts.get_all_related_objects()
-            reverse_rels += opts.get_all_related_many_to_many_objects()
+            reverse_rels = get_all_related_objects(opts)
+            reverse_rels += get_all_related_many_to_many_objects(opts)
 
         for relation in reverse_rels:
             accessor_name = relation.get_accessor_name()
@@ -991,13 +993,13 @@ class ModelSerializer(Serializer):
         meta = self.opts.model._meta
 
         # Reverse fk or one-to-one relations
-        for (obj, model) in meta.get_all_related_objects_with_model():
+        for (obj, model) in get_all_related_objects_with_model(meta):
             field_name = obj.get_accessor_name()
             if field_name in attrs:
                 related_data[field_name] = attrs.pop(field_name)
 
         # Reverse m2m relations
-        for (obj, model) in meta.get_all_related_m2m_objects_with_model():
+        for (obj, model) in get_all_related_m2m_objects_with_model(meta):
             field_name = obj.get_accessor_name()
             if field_name in attrs:
                 m2m_data[field_name] = attrs.pop(field_name)
@@ -1073,7 +1075,7 @@ class ModelSerializer(Serializer):
             related_fields = dict([
                 (field.get_accessor_name(), field)
                 for field, model
-                in obj._meta.get_all_related_objects_with_model()
+                in get_all_related_objects_with_model(obj._meta)
             ])
             for accessor_name, related in obj._related_data.items():
                 if isinstance(related, RelationsList):
