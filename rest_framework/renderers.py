@@ -13,7 +13,7 @@ import django
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
 from django.http.multipartparser import parse_header
-from django.template import RequestContext, loader, Template
+from django.template import loader, Template
 from django.test.client import encode_multipart
 from django.utils import six
 from django.utils.xmlutils import SimplerXMLGenerator
@@ -277,7 +277,7 @@ class TemplateHTMLRenderer(BaseRenderer):
     def resolve_context(self, data, request, response):
         if response.exception:
             data['status_code'] = response.status_code
-        return RequestContext(request, data)
+        return data
 
     def get_template_names(self, response, view):
         if response.template_name:
@@ -358,7 +358,7 @@ class HTMLFormRenderer(BaseRenderer):
         request = renderer_context['request']
 
         template = loader.get_template(self.template)
-        context = RequestContext(request, {'form': data})
+        context = {'form': data}
         return template.render(context)
 
 
@@ -604,7 +604,6 @@ class BrowsableAPIRenderer(BaseRenderer):
 
         template = loader.get_template(self.template)
         context = self.get_context(data, accepted_media_type, renderer_context)
-        context = RequestContext(renderer_context['request'], context)
         ret = template.render(context)
 
         # Munge DELETE Response code to allow us to return content
