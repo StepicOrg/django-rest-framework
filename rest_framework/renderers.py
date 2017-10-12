@@ -269,7 +269,7 @@ class TemplateHTMLRenderer(BaseRenderer):
             template = self.resolve_template(template_names)
 
         context = self.resolve_context(data, request, response)
-        return template.render(context)
+        return template.render(context, request)
 
     def resolve_template(self, template_names):
         return loader.select_template(template_names)
@@ -329,7 +329,7 @@ class StaticHTMLRenderer(TemplateHTMLRenderer):
             request = renderer_context['request']
             template = self.get_exception_template(response)
             context = self.resolve_context(data, request, response)
-            return template.render(context)
+            return template.render(context, request)
 
         return data
 
@@ -359,7 +359,7 @@ class HTMLFormRenderer(BaseRenderer):
 
         template = loader.get_template(self.template)
         context = {'form': data}
-        return template.render(context)
+        return template.render(context, request)
 
 
 class BrowsableAPIRenderer(BaseRenderer):
@@ -604,7 +604,7 @@ class BrowsableAPIRenderer(BaseRenderer):
 
         template = loader.get_template(self.template)
         context = self.get_context(data, accepted_media_type, renderer_context)
-        ret = template.render(context)
+        ret = template.render(context, renderer_context['request'])
 
         # Munge DELETE Response code to allow us to return content
         # (Do this *after* we've rendered the template so that we include
