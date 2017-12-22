@@ -494,9 +494,13 @@ class BrowsableAPIRenderer(BaseRenderer):
                 # Get a read-only version of the serializer
                 serializer = view.get_serializer(instance=obj)
                 if obj is None:
+                    excluded_fields = []
                     for name, field in serializer.fields.items():
                         if getattr(field, 'read_only', None):
-                            del serializer.fields[name]
+                            excluded_fields.append(name)
+
+                    for name in excluded_fields:
+                        del serializer.fields[name]
 
                 # Render the raw data content
                 renderer = renderer_class()
