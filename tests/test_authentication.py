@@ -676,7 +676,7 @@ class FailingAuthAccessedInRenderer(TestCase):
 
             def render(self, data, media_type=None, renderer_context=None):
                 request = renderer_context['request']
-                if request.user.is_authenticated():
+                if request.user.is_authenticated:
                     return b'authenticated'
                 return b'not authenticated'
 

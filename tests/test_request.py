@@ -333,9 +333,9 @@ class TestUserSetter(TestCase):
 
     def test_user_can_logout(self):
         self.request.user = self.user
-        self.assertFalse(self.request.user.is_anonymous())
+        self.assertFalse(self.request.user.is_anonymous)
         logout(self.request)
-        self.assertTrue(self.request.user.is_anonymous())
+        self.assertTrue(self.request.user.is_anonymous)
 
 
 class TestAuthSetter(TestCase):

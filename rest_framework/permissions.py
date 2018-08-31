@@ -44,7 +44,7 @@ class IsAuthenticated(BasePermission):
     """
 
     def has_permission(self, request, view):
-        return request.user and request.user.is_authenticated()
+        return request.user and request.user.is_authenticated
 
 
 class IsAdminUser(BasePermission):
@@ -65,7 +65,7 @@ class IsAuthenticatedOrReadOnly(BasePermission):
         return (
             request.method in SAFE_METHODS or
             request.user and
-            request.user.is_authenticated()
+            request.user.is_authenticated
         )
 
 
@@ -129,7 +129,7 @@ class DjangoModelPermissions(BasePermission):
 
         return (
             request.user and
-            (request.user.is_authenticated() or not self.authenticated_users_only) and
+            (request.user.is_authenticated or not self.authenticated_users_only) and
             request.user.has_perms(perms)
         )
 

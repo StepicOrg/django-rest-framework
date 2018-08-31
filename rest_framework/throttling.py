@@ -170,7 +170,7 @@ class AnonRateThrottle(SimpleRateThrottle):
     scope = 'anon'
 
     def get_cache_key(self, request, view):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return None  # Only throttle unauthenticated requests.
 
         ident = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -196,7 +196,7 @@ class UserRateThrottle(SimpleRateThrottle):
     scope = 'user'
 
     def get_cache_key(self, request, view):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             ident = request.user.id
         else:
             ident = self.get_ident(request)
@@ -244,7 +244,7 @@ class ScopedRateThrottle(SimpleRateThrottle):
         Otherwise generate the unique cache key by concatenating the user id
         with the '.throttle_scope` property of the view.
         """
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             ident = request.user.id
         else:
             ident = self.get_ident(request)
