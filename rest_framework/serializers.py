@@ -718,7 +718,7 @@ class ModelSerializer(Serializer):
             if model_field.remote_field:
                 to_many = isinstance(model_field,
                                      models.fields.related.ManyToManyField)
-                related_model = _resolve_model(model_field.remote_field.to)
+                related_model = _resolve_model(model_field.remote_field.model)
 
                 if to_many and not model_field.remote_field.through._meta.auto_created:
                     has_through_model = True
