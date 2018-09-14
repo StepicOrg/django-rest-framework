@@ -28,8 +28,8 @@ def _get_validation_exclusions(obj, pk=None, slug_field=None, lookup_field=None)
     if pk:
         # Deprecated
         pk_field = obj._meta.pk
-        while pk_field.rel:
-            pk_field = pk_field.rel.to._meta.pk
+        while pk_field.remote_field:
+            pk_field = pk_field.remote_field.model._meta.pk
         include.append(pk_field.name)
 
     if slug_field:

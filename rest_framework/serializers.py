@@ -700,9 +700,9 @@ class ModelSerializer(Serializer):
 
         # Deal with adding the primary key field
         pk_field = opts.pk
-        while pk_field.rel and pk_field.rel.parent_link:
+        while pk_field.remote_field and pk_field.remote_field.parent_link:
             # If model is a child via multitable inheritance, use parent's pk
-            pk_field = pk_field.rel.to._meta.pk
+            pk_field = pk_field.remote_field.model._meta.pk
 
         serializer_pk_field = self.get_pk_field(pk_field)
         if serializer_pk_field:
@@ -715,15 +715,15 @@ class ModelSerializer(Serializer):
         for model_field in forward_rels:
             has_through_model = False
 
-            if model_field.rel:
+            if model_field.remote_field:
                 to_many = isinstance(model_field,
                                      models.fields.related.ManyToManyField)
-                related_model = _resolve_model(model_field.rel.to)
+                related_model = _resolve_model(model_field.remote_field.to)
 
-                if to_many and not model_field.rel.through._meta.auto_created:
+                if to_many and not model_field.remote_field.through._meta.auto_created:
                     has_through_model = True
 
-            if model_field.rel and nested:
+            if model_field.remote_field and nested:
                 if len(inspect.getargspec(self.get_nested_field).args) == 2:
                     warnings.warn(
                         'The `get_nested_field(model_field)` call signature '
@@ -735,7 +735,7 @@ class ModelSerializer(Serializer):
                     field = self.get_nested_field(model_field)
                 else:
                     field = self.get_nested_field(model_field, related_model, to_many)
-            elif model_field.rel:
+            elif model_field.remote_field:
                 if len(inspect.getargspec(self.get_nested_field).args) == 3:
                     warnings.warn(
                         'The `get_related_field(model_field, to_many)` call '
@@ -770,7 +770,7 @@ class ModelSerializer(Serializer):
             if not self.opts.fields or accessor_name not in self.opts.fields:
                 continue
             related_model = relation.model
-            to_many = relation.field.rel.multiple
+            to_many = relation.field.remote_field.multiple
             has_through_model = False
             is_m2m = isinstance(relation.field,
                                 models.fields.related.ManyToManyField)
@@ -778,7 +778,7 @@ class ModelSerializer(Serializer):
             if (
                 is_m2m and
                 hasattr(relation.field.rel, 'through') and
-                not relation.field.rel.through._meta.auto_created
+                not relation.field.remote_field.through._meta.auto_created
             ):
                 has_through_model = True
 
@@ -1009,7 +1009,7 @@ class ModelSerializer(Serializer):
             temp_m2m = list(meta.many_to_many)
         else:
             temp_m2m = meta.many_to_many
-        for field in temp_m2m + meta.virtual_fields:
+        for field in temp_m2m + meta.private_fields:
             if isinstance(field, GenericForeignKey):
                 continue
             if field.name in attrs:

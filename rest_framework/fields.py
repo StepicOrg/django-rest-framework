@@ -411,7 +411,7 @@ class ModelField(WritableField):
     def from_native(self, value):
         rel = getattr(self.model_field, "rel", None)
         if rel is not None:
-            return rel.to._meta.get_field(rel.field_name).to_python(value)
+            return rel.model._meta.get_field(rel.field_name).to_python(value)
         else:
             return self.model_field.to_python(value)
 
