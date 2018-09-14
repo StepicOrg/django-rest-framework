@@ -724,7 +724,7 @@ class ModelSerializer(Serializer):
                     has_through_model = True
 
             if model_field.remote_field and nested:
-                if len(inspect.getargspec(self.get_nested_field).args) == 2:
+                if len(inspect.getfullargspec(self.get_nested_field).args) == 2:
                     warnings.warn(
                         'The `get_nested_field(model_field)` call signature '
                         'is deprecated. '
@@ -736,7 +736,7 @@ class ModelSerializer(Serializer):
                 else:
                     field = self.get_nested_field(model_field, related_model, to_many)
             elif model_field.remote_field:
-                if len(inspect.getargspec(self.get_nested_field).args) == 3:
+                if len(inspect.getfullargspec(self.get_nested_field).args) == 3:
                     warnings.warn(
                         'The `get_related_field(model_field, to_many)` call '
                         'signature is deprecated. '

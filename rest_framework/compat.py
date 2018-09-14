@@ -204,7 +204,7 @@ try:
     # check_nonce's calling signature in django-oauth-plus changes sometime
     # between versions 2.0 and 2.2.1
     def check_nonce(request, oauth_request, oauth_nonce, oauth_timestamp):
-        check_nonce_args = inspect.getargspec(oauth_provider_store.check_nonce).args
+        check_nonce_args = inspect.getfullargspec(oauth_provider_store.check_nonce).args
         if 'timestamp' in check_nonce_args:
             return oauth_provider_store.check_nonce(
                 request, oauth_request, oauth_nonce, oauth_timestamp
