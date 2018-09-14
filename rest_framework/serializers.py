@@ -1065,7 +1065,7 @@ class ModelSerializer(Serializer):
 
         if getattr(obj, '_m2m_data', None):
             for accessor_name, object_list in obj._m2m_data.items():
-                setattr(obj, accessor_name, object_list)
+                getattr(obj, accessor_name).set(object_list)
                 if hasattr(obj, '_prefetched_objects_cache') \
                         and accessor_name in obj._prefetched_objects_cache:
                     obj._prefetched_objects_cache[accessor_name] = object_list
