@@ -19,7 +19,7 @@ import itertools
 from collections import namedtuple
 from django.conf.urls import url
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import NoReverseMatch
+from django.urls import NoReverseMatch
 from rest_framework import views
 from rest_framework.compat import SortedDict
 from rest_framework.response import Response

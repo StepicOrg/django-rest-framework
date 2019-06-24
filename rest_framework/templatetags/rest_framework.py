@@ -1,6 +1,6 @@
 from __future__ import unicode_literals, absolute_import
 from django import template
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 from django.http import QueryDict
 from django.utils import six
 from django.utils.encoding import iri_to_uri
